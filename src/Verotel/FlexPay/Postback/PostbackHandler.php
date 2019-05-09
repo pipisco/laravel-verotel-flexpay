@@ -2,7 +2,6 @@
 
 namespace Pipisco\Verotel\FlexPay\Postback;
 
-use Illuminate\Http\Request;
 use Pipisco\Verotel\FlexPay\Enums\Event;
 use Pipisco\Verotel\FlexPay\Enums\UrlParameter;
 use Pipisco\Verotel\FlexPay\FlexPayException;
@@ -38,15 +37,15 @@ class PostbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      */
-    public function get(Request $request) : array
+    public function get(array $request) : array
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 
@@ -88,7 +87,7 @@ class PostbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      *
@@ -97,11 +96,11 @@ class PostbackHandler
      * essential information about the sale. If more information is needed, for example billing address or email
      * address of the buyer, the merchant should query the status page.
      */
-    public function initial(Request $request) : array
+    public function initial(array $request) : array
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 
@@ -109,17 +108,17 @@ class PostbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      *
      * @NOTE: Rebill postback call is sent to the merchant's URL immediately after a successful rebill transaction.
      */
-    public function rebill(Request $request) : array 
+    public function rebill(array $request) : array 
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 
@@ -127,7 +126,7 @@ class PostbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      *
@@ -135,11 +134,11 @@ class PostbackHandler
      * expiration date or the date of the next planned rebill gets shifted by number of days to the future. The extend
      * postback is then sent to merchant's postback URL to notify the merchant about that the subscription got extended.
      */
-    public function extend(Request $request) : array
+    public function extend(array $request) : array
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 
@@ -147,17 +146,17 @@ class PostbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      *
      * @NOTE: If Merchant or Verotel support changes the next rebill price the Downgrade postback call is sent
      */
-    public function downgrade(Request $request) : array
+    public function downgrade(array $request) : array
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 
@@ -165,18 +164,18 @@ class PostbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      *
      * @NOTE: Cancel postback call is sent to the merchant's URL after the subscription is cancelled by the buyer,
      * merchant, Verotel support or by the system.
      */
-    public function cancel(Request $request) : array
+    public function cancel(array $request) : array
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 
@@ -184,7 +183,7 @@ class PostbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      *
@@ -192,11 +191,11 @@ class PostbackHandler
      * Verotel support. The postback call is sent to the merchant's postback URL immediately after the
      * subscription was uncancelled.
      */
-    public function uncancel(Request $request) : array
+    public function uncancel(array $request) : array
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 
@@ -204,7 +203,7 @@ class PostbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      *
@@ -212,11 +211,11 @@ class PostbackHandler
      * The reason for the termination could be the end of a cancelled subscription, declined rebill transaction or
      * termination by Verotel support or the merchant.
      */
-    public function expiry(Request $request) : array
+    public function expiry(array $request) : array
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 
@@ -224,7 +223,7 @@ class PostbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      *
@@ -232,11 +231,11 @@ class PostbackHandler
      * is credited by merchant, Verotel support or by system (e.g. when an automated refund is performed).
      * The refund also terminates subscription.
      */
-    public function credit(Request $request) : array
+    public function credit(array $request) : array
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 
@@ -244,18 +243,18 @@ class PostbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      *
      * @NOTE: Chargeback postback call is sent to the merchant's postback URL when sale transaction is chargebacked.
      * This also blacklists the buyer.
      */
-    public function chargeback(Request $request) : array
+    public function chargeback(array $request) : array
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 
@@ -263,7 +262,7 @@ class PostbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      * 
@@ -272,11 +271,11 @@ class PostbackHandler
      * the buyer is switching to is successfully created and the previous subscription is terminated in Verotel system
      * (No Expiry postback is sent). See “FlexPay API Upgrade” document for more details.
      */
-    public function upgrade(Request $request) : array
+    public function upgrade(array $request) : array
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 

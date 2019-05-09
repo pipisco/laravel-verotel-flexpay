@@ -199,7 +199,9 @@ trait UrlConstructor
      */
     public function url(string $path, array $params) : string
     {
-        $params = $this->serializeParameters($params);
+        $params                          = $this->serializeParameters($params);
+        $signature                       = $this->getSignature($params);
+        $params[UrlParameter::SIGNATURE] = $signature;
 
         return sprintf('%s%s?%s', static::BASE_URL, $path, http_build_query($params));
     }
@@ -221,9 +223,14 @@ trait UrlConstructor
         }
 
         foreach ($params as $param => $user_value) {
-            if (! isset($attributes[$param]) || ! is_null($attributes[$param])) {
+
+            if ($attributes[$param]) {
                 continue;
             }
+            if (! is_null($attributes[$param])) {
+                continue;
+            }
+
             if (isset($serializeArray[$param])) {
                 continue;
             }
@@ -237,9 +244,6 @@ trait UrlConstructor
         }
 
         ksort($serializeArray, SORT_REGULAR);
-
-        $signature                               = $this->getSignature($serializeArray);
-        $serializeArray[UrlParameter::SIGNATURE] = $signature;
 
         return $serializeArray;
     }

@@ -231,7 +231,7 @@ class FlexPayClient
     public function postback() : PostbackHandler
     {
         if (! $this->postback) {
-            $this->postback = new PostbackHandler($this->shop_id, $this->secret);
+            $this->postback = new PostbackHandler($this->shop_id, $this->secret, $this->version);
         }
 
         return $this->postback;
@@ -243,7 +243,7 @@ class FlexPayClient
     public function callback() : CallbackHandler
     {
         if (! $this->callback) {
-            $this->callback = new CallbackHandler($this->shop_id, $this->secret);
+            $this->callback = new CallbackHandler($this->shop_id, $this->secret, $this->version);
         }
 
         return $this->callback;
