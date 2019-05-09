@@ -82,7 +82,6 @@ class VerotelController
         return view('subscription', [
             'url'              => $this->flexpay->processor()->subscription([
                 UrlParameter::NAME              => $this->name,
-                UrlParameter::DESCRIPTION       => $this->description,
                 UrlParameter::SUBSCRIPTION_TYPE => $this->subscription_type,
                 UrlParameter::PRICE_AMOUNT      => $this->price_amount,
                 UrlParameter::PRICE_CURRENCY    => $this->price_currency,
