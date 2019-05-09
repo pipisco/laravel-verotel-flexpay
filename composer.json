@@ -22,10 +22,5 @@
         "psr-4": {
             "Pipisco\\Verotel\\FlexPay\\": "src/Verotel/FlexPay/"
         }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Pipisco\\Tests\\Verotel\\FlexPay\\": "tests/Verotel/FlexPay/"
-        }
     }
 }
