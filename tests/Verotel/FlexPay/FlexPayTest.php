@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipisco\Tests\Verotel\FlexPay;
+namespace Pipisco\Verotel\FlexPay\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Pipisco\Verotel\FlexPay\Enums\UrlParameter;

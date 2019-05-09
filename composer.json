@@ -25,7 +25,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Pipisco\\Tests\\Verotel\\FlexPay\\": "tests/Verotel/FlexPay/"
+            "Pipisco\\Verotel\\FlexPay\\Tests\\": "tests/Verotel/FlexPay/"
         }
     }
 }
