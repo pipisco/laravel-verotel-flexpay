@@ -21,6 +21,8 @@ class FlexPayTest extends TestCase
     protected $paint_fest_base_uri       = 'https://secure.paintfestpayments.com/';
     protected $verotel_base_uri          = 'https://secure.verotel.com/';
 
+    protected $callback_success_redirect  = 'event=initial&nextChargeOn=2019-06-09&paymentMethod=CC&period=P1M&priceAmount=6.95&priceCurrency=USD&saleID=18963101&shopID=115790&subscriptionType=recurring&type=subscription&signature=d2ad46792f2d68fc83da5a4efbe0b65dc37d9e10';
+
     protected $postback_purchase_request  = 'CCBrand=1010101010101&custom1=Custom+Param+1&custom2=Custom+Param+2&custom3=Custom+Param+3&paymentMethod=CC&priceAmount=12.31&priceCurrency=EUR&referenceID=98040000000000000&saleID=456789&shopID=115790&transactionID=1001000&truncatedPAN=XXXXXXXXXXXX3321&type=purchase&signature=4d3119e55dc0307154a84140367f5abb976c694e';
     protected $postback_initial_request   = 'custom1=Custom+Param+1&custom2=Custom+Param+2&custom3=Custom+Param+3&event=initial&expiresOn=2019-06-09&paymentMethod=CC&period=P1M&priceAmount=12.31&priceCurrency=EUR&referenceID=98040000000000000&saleID=500000&shopID=115790&subscriptionType=one-time&transactionID=100100&type=subscription&signature=7a1a4b6b582743029c4d28667db4b254f35d8ebd';
     protected $postback_rebill_request    = 'amount=12.31&currency=EUR&custom1=Custom+Param+1&custom2=Custom+Param+2&custom3=Custom+Param+3&event=rebill&nextChargeOn=2019-06-30&paymentMethod=CC&referenceID=98040000000000000&saleID=456789&shopID=115790&subscriptionPhase=normal&subscriptionType=recurring&type=subscription&signature=a2a4a35f826faf8b13ec4b09840585245dc40b76';
@@ -33,7 +35,23 @@ class FlexPayTest extends TestCase
     protected $postback_credit_request    = 'custom1=Custom+Param+1&custom2=Custom+Param+2&custom3=Custom+Param+3&event=credit&parentID=10101010&priceAmount=12.31&priceCurrency=EUR&referenceID=98040000000000000&saleID=456789&shopID=115790&subscriptionPhase=normal&subscriptionType=one-time&transactionID=1001000&type=subscription&signature=6d44120eee1f5c4f8eee6debd4e02d8cb0e99aae';
     protected $postback_chargeback_request    = 'custom1=Custom+Param+1&custom2=Custom+Param+2&custom3=Custom+Param+3&event=chargeback&parentID=10101010&priceAmount=12.31&priceCurrency=EUR&referenceID=98040000000000000&saleID=456789&shopID=115790&subscriptionPhase=normal&subscriptionType=one-time&transactionID=1001000&type=subscription&signature=37429bf3bd4d7917023f4586ec9f9d94df9d1e8d';
 
-    public function testPurchasePostback()
+
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testCallbackSuccessRedirect() : void
+    {
+        $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
+        parse_str($this->callback_success_redirect, $callback_success_redirect);
+        $data    = $flexpay->callback()->success($callback_success_redirect);
+
+        $this->assertTrue($data[UrlParameter::SIGNATURE] === $callback_success_redirect[UrlParameter::SIGNATURE]);
+    }
+
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testPurchasePostback() : void
     {
         $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
         parse_str($this->postback_purchase_request, $postback_purchase_request);
@@ -42,7 +60,10 @@ class FlexPayTest extends TestCase
         $this->assertTrue($data[UrlParameter::SIGNATURE] === $postback_purchase_request[UrlParameter::SIGNATURE]);
     }
 
-    public function testInitialPostback()
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testInitialPostback() : void
     {
         $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
         parse_str($this->postback_initial_request, $postback_initial_request);
@@ -51,7 +72,10 @@ class FlexPayTest extends TestCase
         $this->assertTrue($data[UrlParameter::SIGNATURE] === $postback_initial_request[UrlParameter::SIGNATURE]);
     }
 
-    public function testRebillRequest()
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testRebillRequest() : void
     {
         $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
         parse_str($this->postback_rebill_request, $postback_rebill_request);
@@ -60,7 +84,10 @@ class FlexPayTest extends TestCase
         $this->assertTrue($data[UrlParameter::SIGNATURE] === $postback_rebill_request[UrlParameter::SIGNATURE]);
     }
 
-    public function testCancelRequest()
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testCancelRequest() : void
     {
         $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
         parse_str($this->postback_cancel_request, $postback_cancel_request);
@@ -69,7 +96,10 @@ class FlexPayTest extends TestCase
         $this->assertTrue($data[UrlParameter::SIGNATURE] === $postback_cancel_request[UrlParameter::SIGNATURE]);
     }
 
-    public function testUncancelRequest()
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testUncancelRequest() : void
     {
         $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
         parse_str($this->postback_uncancel_request, $postback_uncancel_request);
@@ -78,7 +108,10 @@ class FlexPayTest extends TestCase
         $this->assertTrue($data[UrlParameter::SIGNATURE] === $postback_uncancel_request[UrlParameter::SIGNATURE]);
     }
 
-    public function testExtendRequest()
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testExtendRequest() : void
     {
         $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
         parse_str($this->postback_extend_request, $postback_extend_request);
@@ -87,7 +120,10 @@ class FlexPayTest extends TestCase
         $this->assertTrue($data[UrlParameter::SIGNATURE] === $postback_extend_request[UrlParameter::SIGNATURE]);
     }
 
-    public function testExpiryRequest()
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testExpiryRequest() : void
     {
         $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
         parse_str($this->postback_expiry_request, $postback_expiry_request);
@@ -96,7 +132,10 @@ class FlexPayTest extends TestCase
         $this->assertTrue($data[UrlParameter::SIGNATURE] === $postback_expiry_request[UrlParameter::SIGNATURE]);
     }
 
-    public function testDowngradeRequest()
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testDowngradeRequest() : void
     {
         $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
         parse_str($this->postback_downgrade_request, $postback_downgrade_request);
@@ -105,7 +144,10 @@ class FlexPayTest extends TestCase
         $this->assertTrue($data[UrlParameter::SIGNATURE] === $postback_downgrade_request[UrlParameter::SIGNATURE]);
     }
 
-    public function testUpgradeRequest()
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testUpgradeRequest() : void
     {
         $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
         parse_str($this->postback_upgrade_request, $postback_upgrade_request);
@@ -114,7 +156,10 @@ class FlexPayTest extends TestCase
         $this->assertTrue($data[UrlParameter::SIGNATURE] === $postback_upgrade_request[UrlParameter::SIGNATURE]);
     }
 
-    public function testCreditRequest()
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testCreditRequest() : void
     {
         $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
         parse_str($this->postback_credit_request, $postback_credit_request);
@@ -123,7 +168,10 @@ class FlexPayTest extends TestCase
         $this->assertTrue($data[UrlParameter::SIGNATURE] === $postback_credit_request[UrlParameter::SIGNATURE]);
     }
 
-    public function testChargeBackRequest()
+    /**
+     * @throws \Pipisco\Verotel\FlexPay\FlexPayException
+     */
+    public function testChargeBackRequest() : void
     {
         $flexpay = new FlexPayClient($this->shop_key, $this->signature_key, $this->version);
         parse_str($this->postback_chargeback_request, $postback_chargeback_request);
