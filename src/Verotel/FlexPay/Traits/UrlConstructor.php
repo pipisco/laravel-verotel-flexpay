@@ -51,6 +51,8 @@ trait UrlConstructor
         UrlParameter::TRIAL_AMOUNT          => null,
         UrlParameter::TRIAL_PERIOD          => null,
         UrlParameter::UPGRADE_OPTIONS       => null,
+        UrlParameter::AMOUNT                => null,
+        UrlParameter::CURRENCY              => null,
     ];
 
     /**

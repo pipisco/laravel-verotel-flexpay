@@ -14,4 +14,6 @@ class Event
     const CREDIT        = 'credit';
     const CHARGEBACK    = 'chargeback';
     const UPGRADE       = 'upgrade';
+
+    const PURCHASE      = 'purchase';
 }

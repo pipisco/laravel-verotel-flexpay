@@ -223,4 +223,14 @@ class UrlParameter
      */
     const UPGRADE_OPTIONS       = 'upgradeOption';
 
+    /**
+     * @var string
+     */
+    const AMOUNT                = 'amount';
+
+    /**
+     * @var string
+     */
+    const CURRENCY              = 'currency';
+
 }
