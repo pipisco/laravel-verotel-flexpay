@@ -38,6 +38,16 @@ class FlexPayHelper
     /**
      * @var array
      */
+    protected $purchase_mandatory_params = [
+        UrlParameter::PRICE_AMOUNT,
+        UrlParameter::PRICE_CURRENCY,
+        UrlParameter::PERIOD,
+        UrlParameter::SUBSCRIPTION_TYPE,
+    ];
+
+    /**
+     * @var array
+     */
     protected $subscription_mandatory_params = [
         UrlParameter::PRICE_AMOUNT,
         UrlParameter::PRICE_CURRENCY,
@@ -59,6 +69,9 @@ class FlexPayHelper
         UrlParameter::SALE_ID,
     ];
 
+    /**
+     * @var array
+     */
     protected $upgrade_subscription_mandatory_params = [
         UrlParameter::PRECEDING_SALE_ID,
         UrlParameter::PRICE_AMOUNT,
@@ -87,6 +100,11 @@ class FlexPayHelper
      */
     public function purchase(array $params) : string
     {
+        foreach ($this->purchase_mandatory_params as $param) {
+            if (! isset($params[$param])) {
+                throw new FlexPayException(sprintf('Mandatory parameter %s is not defined!', $param));
+            }
+        }
 
         $this->setType(Type::PURCHASE);
 

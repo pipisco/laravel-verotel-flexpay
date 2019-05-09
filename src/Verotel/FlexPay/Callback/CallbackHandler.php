@@ -2,7 +2,6 @@
 
 namespace Pipisco\Verotel\FlexPay\Callback;
 
-use Illuminate\Http\Request;
 use Pipisco\Verotel\FlexPay\Enums\UrlParameter;
 use Pipisco\Verotel\FlexPay\FlexPayException;
 use Pipisco\Verotel\FlexPay\Traits\SignatureCalculation;
@@ -37,15 +36,15 @@ class CallbackHandler
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return array
      * @throws FlexPayException
      */
-    public function success(Request $request) : array
+    public function success(array $request) : array
     {
-        $serialize = $this->serializeParameters($request->get());
+        $serialize = $this->serializeParameters($request);
 
-        if ($serialize[UrlParameter::SIGNATURE] != $request->get(UrlParameter::SIGNATURE)) {
+        if ($this->getCallbackSigntature($serialize) != $request[UrlParameter::SIGNATURE]) {
             throw new FlexPayException('Access denied. Signature failed verification');
         }
 
