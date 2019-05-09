@@ -50,7 +50,7 @@ class PostbackHandler
         }
 
         if (! isset($serialize[UrlParameter::EVENT]) || is_null($serialize[UrlParameter::EVENT])) {
-            throw new FlexPayException('Undefined post back event type');
+            $serialize[UrlParameter::EVENT] = Event::PURCHASE;
         }
 
         switch ($serialize[UrlParameter::EVENT]) {
@@ -83,6 +83,9 @@ class PostbackHandler
 
             case Event::UPGRADE:
                 return $this->upgrade($request);
+
+            case Event::PURCHASE:
+                return $this->purchase($request);
         }
     }
 
@@ -281,5 +284,22 @@ class PostbackHandler
 
         return $serialize;
     }
+
+    /**
+     * @param array $request
+     * @return array
+     * @throws FlexPayException
+     */
+    public function purchase(array $request) : array
+    {
+        $serialize = $this->serializeParameters($request);
+
+        if ($this->getPostbackSignature($serialize) != $request[UrlParameter::SIGNATURE]) {
+            throw new FlexPayException('Access denied. Signature failed verification');
+        }
+
+        return $serialize;
+    }
+
 
 }
