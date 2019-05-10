@@ -2,7 +2,7 @@
     "name": "pipisco/laravel-verotel-flexpay",
     "description": "Laravel package allows you to use Verotel payment gateway and accept credit cards and other payment methods on your website.",
     "type": "laravel-package",
-    "keywords": ["laravel", "verotel", "flexpay", "payment", "credit card", "cardbilling", "billing.creditcard", "pipisco"],
+    "keywords": ["laravel", "verotel", "flexpay", "payment", "credit card", "cardbilling", "billing.creditcard", "pipisco", "btc", "bitcoin", "bitcoin.payment"],
     "license": "MIT",
     "version": "1.0.0",
     "authors": [

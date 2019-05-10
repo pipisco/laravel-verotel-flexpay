@@ -2,6 +2,10 @@
 
 namespace Pipisco\Verotel\FlexPay\Enums;
 
+/**
+ * Class Event
+ * @package Pipisco\Verotel\FlexPay\Enums
+ */
 class Event
 {
     const INITIAL       = 'initial';
@@ -14,6 +18,5 @@ class Event
     const CREDIT        = 'credit';
     const CHARGEBACK    = 'chargeback';
     const UPGRADE       = 'upgrade';
-
     const PURCHASE      = 'purchase';
 }

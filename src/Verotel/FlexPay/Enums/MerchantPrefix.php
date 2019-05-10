@@ -20,5 +20,4 @@ class MerchantPrefix
         9444    => PaymentProcessor::PAINT_FEST,
         9388    => PaymentProcessor::GAY_CHARGE,
     ];
-
 }
