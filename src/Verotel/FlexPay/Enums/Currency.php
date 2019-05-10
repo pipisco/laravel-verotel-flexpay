@@ -8,7 +8,6 @@ namespace Pipisco\Verotel\FlexPay\Enums;
  */
 class Currency
 {
-
     const USD   = 'USD';
     const EUR   = 'EUR';
     const GBP   = 'GBR';
@@ -19,5 +18,4 @@ class Currency
     const NOK   = 'NOK';
     const SEK   = 'SEK';
     const BTC   = 'BTC';
-
 }

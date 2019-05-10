@@ -1,7 +1,7 @@
-# Verotel FlexPay Laravel Plugin
+# Verotel FlexPay Laravel Package
 [![Build Status](https://travis-ci.com/pipisco/laravel-verotel-flexpay.svg?branch=master)](https://travis-ci.com/pipisco/laravel-verotel-flexpay)
 
-Verotel FlexPay Laravel Package is component for you Laravel application. Package allows you to use Verotel payment gateway and accept credit cards and other payment methods on your website.
+Verotel FlexPay Laravel Package is component for you Laravel application. Package allows you to use Verotel payment gateway and accept credit cards and other payment methods on your website. Now you can, using this SDK, make payment in cryptocurrency on your resource.
 
 ## Table of Contents
 
