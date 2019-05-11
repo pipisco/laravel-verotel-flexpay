@@ -90,9 +90,9 @@ trait UrlConstructor
     }
 
     /**
-     * @param string $type
+     * @param null|string $type
      */
-    public function setType(string $type) : void
+    public function setType(?string $type = null) : void
     {
         $this->attributes[UrlParameter::TYPE] = $type;
     }
